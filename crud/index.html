@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>crud operation</title>
+    <style>
+        body {
+            margin: 10px;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        #maindiv {
+            display: flex;
+
+        }
+
+        #formdiv {
+            display: block;
+            border-radius: 10px;
+            width: auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            box-shadow: 0 15px 10px 0 rgba(0, 0, 0, 0.5);
+            width: 400px;
+        }
+
+        .input-group {
+            padding: 20px;
+            display: grid;
+            font-size: larger;
+        }
+
+        #submit {
+            padding: 15px;
+            width: 200px;
+            font-size: x-large;
+            border-radius: 15px;
+            box-shadow: 0 15px 10px 0 rgba(0, 0, 0, 0.5);
+
+        }
+
+        label,
+        input {
+            padding: 8px;
+
+        }
+
+        #tablediv {
+            margin: 0 50px 0 50px;
+            box-shadow: 0 15px 10px 0 rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            width: 100%;
+
+        }
+
+        table {
+
+            width: 100%;
+            font-size: larger;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+
+        td,
+        th {
+            padding: 10px;
+        }
+
+        th {
+            background-color: black;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: darkgray;
+            color: #fff;
+        }
+
+        tr:nth-child(odd) {
+            color: black;
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>EMPLOYEE DETAILS</h2>
+    <div id="maindiv">
+        
+        <form onSubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
+            <div id=formdiv>
+                <div class="input-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="phone">Phone:</label>
+                    <input type="text" id="phone" name="phone" required>
+                </div>
+                <div class="input-group">
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="input-group">
+                    <input type="submit" value="Submit" id="submit">
+                </div>
+
+            </div>
+        </form>
+
+        <div id="tablediv">
+            <table id="emptab">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>City</th>
+                        <th>action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+
+        var selectedRow = null;
+        function onFormSubmit() {
+            alert("Record submitted");
+            var formData = readFormData();
+            if (selectedRow == null)
+                insertNewRecord(formData);
+            else
+                updateRecord(formData);
+            resetForm();
+
+        }
+
+        function readFormData() {
+            var formData = {};
+
+            formData["name"] = document.getElementById("name").value;
+            formData["email"] = document.getElementById("email").value;
+            formData["phone"] = document.getElementById("phone").value;
+            formData["city"] = document.getElementById("city").value;
+            return formData;
+
+        }
+
+        function insertNewRecord(data) {
+            var table = document.getElementById("emptab").getElementsByTagName('tbody')[0];
+
+            var newRow = table.insertRow(table.length);
+            cell1 = newRow.insertCell(0);
+            cell1.innerHTML = data.name;
+
+            cell2 = newRow.insertCell(1);
+            cell2.innerHTML = data.email;
+
+            cell3 = newRow.insertCell(2);
+            cell3.innerHTML = data.phone;
+
+            cell4 = newRow.insertCell(3);
+            cell4.innerHTML = data.city;
+
+            cell4 = newRow.insertCell(4);
+            cell4.innerHTML = `<a onClick = onEdit(this)>Edit</a>
+                            <a onClick = onDelete(this)>Delete</a>`;
+
+        }
+
+        function resetForm() {
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("city").value = "";
+            selectedRow = null;
+
+        }
+
+        function onEdit(td) {
+            selectedRow = td.parentElement.parentElement;
+            document.getElementById("name").value = selectedRow.cells[0].innerHTML;
+            document.getElementById("email").value = selectedRow.cells[1].innerHTML;
+            document.getElementById("phone").value = selectedRow.cells[2].innerHTML;
+            document.getElementById("city").value = selectedRow.cells[3].innerHTML;
+        }
+
+        function updateRecord(formData) {
+            selectedRow.cells[0].innerHTML = formData.name;
+            selectedRow.cells[1].innerHTML = formData.email;
+            selectedRow.cells[2].innerHTML = formData.phone;
+            selectedRow.cells[3].innerHTML = formData.city;
+
+        }
+
+        function onDelete(td) {
+            if (window.confirm("Are you sure want to delete the record")) {
+                selectedRowdel = td.parentElement.parentElement;
+                document.getElementById("emptab").deleteRow(selectedRowdel.rowIndex)
+                resetForm();
+            }
+        }
+
+    </script>
+</body>
+
+</html>
